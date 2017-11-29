@@ -24,11 +24,11 @@ docker-compose scale web=5
 ```
 docker logs sidecar
 ```
-5. Scale additional web servers down
+7. Scale additional web servers down
 ```
 docker-compose scale web=2
 ```
-6. Verify containers are removed by checking sidecar
+8. Verify containers are removed by checking sidecar
 ```
 docker logs sidecar
 ```
