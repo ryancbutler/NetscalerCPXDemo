@@ -41,7 +41,6 @@ Enable-NSLBVirtualServer -Name $LB -Force -Session $Session -ErrorAction Continu
 
 while($true)
 {
-write-host "Waiting 10 seconds..."
 Start-Sleep -Seconds 10
 $services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"
 $nsservices = Get-NSLBServiceGroupMemberBinding $SG -Session $Session
