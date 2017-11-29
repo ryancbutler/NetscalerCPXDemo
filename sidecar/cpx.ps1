@@ -55,7 +55,7 @@ $needed = $nsservices|select-object -ExpandProperty servername|Sort-Object serve
                 {
                     "<=" {
                         write-HOST "ADD LB SERVER $($compare.InputObject)"
-                        $service = $services|where {$_.ServiceID -eq $($compare.InputObject)}
+                        $service = $services|where-object {$_.ServiceID -eq $($compare.InputObject)}
                         New-NSLBServer -Name $service.ServiceID -IPAddress $service.ServiceAddress -Session $Session -ErrorAction Continue
                         write-host "Enabling server $($service.ServiceID)"
                         Enable-NSLBServer -Name $service.ServiceID -Force -Session $Session -ErrorAction Continue
