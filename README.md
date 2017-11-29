@@ -1,5 +1,5 @@
 # Netscaler CPX POC with Docker Compose
-Uses Docker Compose to deploy a Netscaler CPX to load balance a simple web site. Requires Docker 1.13 or greater and docker compose. Powershell sidecar dynamically adds and removes containers.
+Uses Docker Compose to deploy a Netscaler CPX to load balance a simple web site. Requires Docker 1.13 or greater and Docker compose. PowerShell sidecar dynamically adds and removes containers from the load balancer.
 
 ## Quick Start
 1. Clone the repo and enter the directory
