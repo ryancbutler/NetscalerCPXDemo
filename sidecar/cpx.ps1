@@ -38,6 +38,8 @@ write-host "Binding $SG to $LB"
 Add-NSLBVirtualServerBinding -VirtualServerName $LB -ServiceGroupName $SG -Session $Session -ErrorAction Continue
 write-host "Enabling $LB"
 Enable-NSLBVirtualServer -Name $LB -Force -Session $Session -ErrorAction Continue
+$howmany = Get-NSLBServiceGroupMemberBinding $SG -Session $Session
+write-host "Now load balancing $($howmany.count) containers"
 
 while($true)
 {
@@ -69,5 +71,7 @@ $needed = $nsservices|select-object -ExpandProperty servername|Sort-Object serve
 
                     }
                 }
+            $howmany = Get-NSLBServiceGroupMemberBinding $SG -Session $Session
+            write-host "Now load balancing $($howmany.count) containers"
             }
  } 
