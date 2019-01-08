@@ -2,8 +2,8 @@ version: '3'
 
 services:
   consul:
-    image:  consul:latest
-    command: "consul agent -server -dev"
+    image:  gliderlabs/consul-server:latest
+    command: "-server -bootstrap"
     container_name: consul
     ports:
       - "8400:8400"
@@ -34,7 +34,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
 
   cpx:
-    image: store/citrix/netscalercpx:12.0-56.20
+    image: store/citrix/netscalercpx:12.0-53.16
     tty: true
     ports:
       - 443
