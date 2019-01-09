@@ -1,10 +1,39 @@
 version: '3'
 
 services:
-  consul:
+  consul-server-bootstrap:
     image:  consul:latest
-    command: "agent -server -ui -client 0.0.0.0 -bootstrap-expect=1"
-    container_name: consul
+    command: "agent -server -ui -client 0.0.0.0 -bootstrap-expect=3"
+    networks:
+      consul-cpx:
+        aliases:
+          - consul
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+
+  consul-server-1:
+    image:  consul:latest
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
+    networks:
+      consul-cpx:
+        aliases:
+          - consul
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+
+  consul-server-2:
+    image:  consul:latest
+    command: "agent -server -retry-join consul-server-bootstrap -client 0.0.0.0"
+    networks:
+      consul-cpx:
+        aliases:
+          - consul
     ports:
       - "8400:8400"
       - "8500:8500"
@@ -14,6 +43,8 @@ services:
   sidecar:
     build: ./sidecar
     image: sidecar
+    networks:
+      - consul-cpx
     container_name: sidecar
     links:
       - consul
@@ -24,6 +55,8 @@ services:
   registrator:
     image: gliderlabs/registrator:latest
     command: "-cleanup -resync 5 consul://consul:8500"
+    networks:
+      - consul-cpx
     container_name: registrator
     depends_on:
       - consul
@@ -32,6 +65,8 @@ services:
 
   cpx:
     image: store/citrix/netscalercpx:12.0-56.20
+    networks:
+      - consul-cpx
     tty: true
     ports:
       - 443
@@ -50,9 +85,14 @@ services:
 
   web:
     image: glazeus/hostname
+    networks:
+      - consul-cpx
     ports:
       - 80
     depends_on:
       - consul
     links:
       - consul
+
+networks:
+  consul-cpx:
