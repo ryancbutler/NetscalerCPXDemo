@@ -42,6 +42,9 @@ services:
     container_name: sidecar
     depends_on:
       - consul-server-bootstrap
+      - consul-server-1
+      - consul-server-2
+      - cpx
   
   registrator:
     image: gliderlabs/registrator:latest
@@ -51,6 +54,8 @@ services:
     container_name: registrator
     depends_on:
       - consul-server-bootstrap
+      - consul-server-1
+      - consul-server-2
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
 
