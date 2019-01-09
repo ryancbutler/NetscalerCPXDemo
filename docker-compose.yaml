@@ -50,7 +50,7 @@ services:
       - consul
       - cpx
     depends_on:
-      - consul
+      - consul-server-bootstrap
   
   registrator:
     image: gliderlabs/registrator:latest
@@ -59,7 +59,7 @@ services:
       - consul-cpx
     container_name: registrator
     depends_on:
-      - consul
+      - consul-server-bootstrap
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
 
@@ -90,7 +90,7 @@ services:
     ports:
       - 80
     depends_on:
-      - consul
+      - consul-server-bootstrap
     links:
       - consul
 
