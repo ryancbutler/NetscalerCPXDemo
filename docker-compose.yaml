@@ -21,11 +21,6 @@ services:
       consul-cpx:
         aliases:
           - consul
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:8600"
-      - "8600:8600/udp"
     depends_on:
       - consul-server-bootstrap
 
@@ -36,11 +31,6 @@ services:
       consul-cpx:
         aliases:
           - consul
-    ports:
-      - "8400:8400"
-      - "8500:8500"
-      - "8600:8600"
-      - "8600:8600/udp"
     depends_on:
       - consul-server-bootstrap
   
