@@ -26,6 +26,8 @@ services:
       - "8500:8500"
       - "8600:8600"
       - "8600:8600/udp"
+    depends_on:
+      - consul-server-bootstrap
 
   consul-server-2:
     image:  consul:latest
@@ -39,6 +41,8 @@ services:
       - "8500:8500"
       - "8600:8600"
       - "8600:8600/udp"
+    depends_on:
+      - consul-server-bootstrap
   
   sidecar:
     build: ./sidecar
@@ -46,9 +50,6 @@ services:
     networks:
       - consul-cpx
     container_name: sidecar
-    links:
-      - consul
-      - cpx
     depends_on:
       - consul-server-bootstrap
   
@@ -75,8 +76,6 @@ services:
       - 80:80
       - 88:88
       - 161/udp
-    links:
-      - web
     container_name: cpx
     privileged: true
     environment:
@@ -91,8 +90,6 @@ services:
       - 80
     depends_on:
       - consul-server-bootstrap
-    links:
-      - consul
 
 networks:
   consul-cpx:
