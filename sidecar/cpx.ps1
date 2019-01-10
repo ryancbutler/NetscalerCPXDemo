@@ -13,7 +13,14 @@ do
     Start-Sleep -Seconds 5
     $localip = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/netscalercpx-88" -ErrorAction Continue
     $script:nsip = $localip[0].ServiceAddress
-}UNTIL((test-connection -targetname $nsip -tcpport 80 -quiet) -eq $true)
+    Write-host "Testing for 401 on $nsip"
+    try {
+        Invoke-RestMethod http://$nsip/nitro/v1/config/login -erroraction continue
+    } catch {
+        $statuscode = $_.Exception.Response.StatusCode.value__ 
+    }
+
+}UNTIL($statuscode -eq 401)
 
 write-host "Connecting to CPX at $nsip.."
 #Connect to the Netscaler and create session variable
