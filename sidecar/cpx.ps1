@@ -25,7 +25,7 @@ do
     $script:nsip = $localip[0].ServiceAddress
 
     $testparams = @{
-        Uri = "http://$nsip/config/login"
+        Uri = "http://$nsip/nitro/v1/config/login"
         Method = 'POST'
         Body = $loginJson
         ContentType = 'application/json'
@@ -52,7 +52,7 @@ New-NSLBServiceGroup -Name $SG -Protocol HTTP -Session $Session -ErrorAction Con
 write-host "Creating LB Virtual Server $LB"
 New-NSLBVirtualServer -Name $LB -IPAddress $localip[0].ServiceAddress -ServiceType HTTP -Session $Session -port $LBPORT -ErrorAction Continue
 write-host "Getting service info"
-$services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"
+$services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"|Sort-Object ServiceID -Unique
 write-host "Adding Services"
 foreach ($service in $services)
 {
