@@ -76,7 +76,7 @@ while($true)
 Start-Sleep -Seconds 10
 $services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"
 $nsservices = Get-NSLBServiceGroupMemberBinding $SG -Session $Session
-$present = $services|select-object -ExpandProperty serviceid|Sort-Object ServiceID
+$present = $services|select-object -ExpandProperty serviceid|Sort-Object ServiceID -Unique
 $needed = $nsservices|select-object -ExpandProperty servername|Sort-Object servername
 
         $compares = Compare-Object -ReferenceObject $present -DifferenceObject $needed
