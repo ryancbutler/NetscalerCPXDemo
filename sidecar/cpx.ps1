@@ -1,6 +1,3 @@
-write-host "Waiting for 10 seconds while things load"
-Start-Sleep -Seconds 10
-
 #Netscaler Information
 $script:username = "nsroot"
 $script:password = "nsroot"
@@ -8,15 +5,15 @@ $SG = "svg-HTTPTST"
 $LB = "vlb-HTTPTST"
 $LBPORT = 88
 
-$localip = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/netscalercpx-88"
-$script:nsip = $localip[0].ServiceAddress
 
 #Wait until CPX is up and available
-while((test-connection -targetname $nsip -tcpport 80 -quiet) -eq $false)
+do
 {
     write-host "Waiting for CPX to become available"
     Start-Sleep -Seconds 5
-}
+    $localip = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/netscalercpx-88" -ErrorAction Continue
+    $script:nsip = $localip[0].ServiceAddress
+}UNTIL((test-connection -targetname $nsip -tcpport 80 -quiet) -eq $true)
 
 write-host "Connecting to CPX at $nsip.."
 #Connect to the Netscaler and create session variable
