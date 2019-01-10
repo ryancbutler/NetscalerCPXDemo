@@ -6,6 +6,16 @@ $LB = "vlb-HTTPTST"
 $LBPORT = 88
 
 
+#For testing connectivty
+$login = @{
+    login = @{
+        username = $username;
+        password = $password
+    }
+}
+$loginJson = ConvertTo-Json -InputObject $login
+
+
 #Wait until CPX is up and available
 do
 {
@@ -13,14 +23,23 @@ do
     Start-Sleep -Seconds 5
     $localip = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/netscalercpx-88" -ErrorAction Continue
     $script:nsip = $localip[0].ServiceAddress
-    Write-host "Testing for 401 on $nsip"
-    try {
-        Invoke-RestMethod http://$nsip/nitro/v1/config/login -erroraction continue
-    } catch {
-        $statuscode = $_.Exception.Response.StatusCode.value__ 
+
+    $testparams = @{
+        Uri = "http://$nsip/config/login"
+        Method = 'POST'
+        Body = $loginJson
+        ContentType = 'application/json'
     }
 
-}UNTIL($statuscode -eq 401)
+    Write-host "Testing for AUTH on $nsip"
+    try {
+        $testrest = Invoke-RestMethod @testparams -ErrorAction Continue
+    } catch {
+        Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+        Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+    }
+
+}UNTIL($testrest.errorcode -eq 0)
 
 write-host "Connecting to CPX at $nsip.."
 #Connect to the Netscaler and create session variable
