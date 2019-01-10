@@ -11,6 +11,13 @@ $LBPORT = 88
 $localip = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/netscalercpx-88"
 $script:nsip = $localip[0].ServiceAddress
 
+#Wait until CPX is up and available
+while((test-connection -targetname $nsip -tcpport 80 -quiet) -eq $false)
+{
+    write-host "Waiting for CPX to become available"
+    Start-Sleep -Seconds 5
+}
+
 write-host "Connecting to CPX at $nsip.."
 #Connect to the Netscaler and create session variable
 $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
