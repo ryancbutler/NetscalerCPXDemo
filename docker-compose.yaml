@@ -48,7 +48,7 @@ services:
   
   registrator:
     image: gliderlabs/registrator:latest
-    command: "-cleanup -resync 5 consul://consul:8500"
+    command: "-cleanup -resync 5 consul://consul-server-bootstrap:8500"
     networks:
       - consul-cpx
     container_name: registrator

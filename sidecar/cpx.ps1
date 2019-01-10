@@ -52,7 +52,7 @@ New-NSLBServiceGroup -Name $SG -Protocol HTTP -Session $Session -ErrorAction Con
 write-host "Creating LB Virtual Server $LB"
 New-NSLBVirtualServer -Name $LB -IPAddress $localip[0].ServiceAddress -ServiceType HTTP -Session $Session -port $LBPORT -ErrorAction Continue
 write-host "Getting service info"
-$services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"|Sort-Object ServiceID -Unique
+$services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"
 write-host "Adding Services"
 foreach ($service in $services)
 {
@@ -76,7 +76,7 @@ while($true)
 Start-Sleep -Seconds 10
 $services = invoke-restmethod -uri "http://consul:8500/v1/catalog/service/hostname"
 $nsservices = Get-NSLBServiceGroupMemberBinding $SG -Session $Session
-$present = $services|select-object -ExpandProperty serviceid|Sort-Object ServiceID -Unique
+$present = $services|select-object -ExpandProperty serviceid
 $needed = $nsservices|select-object -ExpandProperty servername|Sort-Object servername
 
         $compares = Compare-Object -ReferenceObject $present -DifferenceObject $needed
