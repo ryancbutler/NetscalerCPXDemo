@@ -75,7 +75,6 @@ services:
     privileged: true
     environment:
       - EULA=yes
-      - lb_ip=192.168.6.2
 
   web:
     image: glazeus/hostname
